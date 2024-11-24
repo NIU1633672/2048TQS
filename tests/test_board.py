@@ -1,11 +1,21 @@
 import pytest
 from src.model.board import Board
+from src.model.cell import Cell
 
-def test_initialize_empty_board():
+def test_initialize_board_with_cells():
+    """
+    Verifica que el tablero se inicializa correctamente con objetos de tipo Cell.
+    """
     board = Board(4)  # Creamos un tablero de 4x4
-    expected_board = [[0, 0, 0, 0] for _ in range(4)]
-    assert board.grid == expected_board
+    for row in board.grid:
+        for cell in row:
+            assert isinstance(cell, Cell), "Cada posición del tablero debe ser un objeto Cell"
 
-def test_board_is_empty():
-    board = Board(4)  # Creamos un tablero 4x4
-    assert board.is_empty()  # Al inicio, todas las celdas deberían estar vacías
+def test_initialize_board_with_empty_cells():
+    """
+    Verifica que todas las celdas del tablero están vacías al inicializarse.
+    """
+    board = Board(4)  # Creamos un tablero de 4x4
+    for row in board.grid:
+        for cell in row:
+            assert cell.is_empty(), "Todas las celdas deben estar vacías al inicio"
