@@ -12,3 +12,9 @@ class Cell:
         if value not in [0, 2, 4]:
             raise ValueError("El valor debe ser 0, 2 o 4")
         self.value = value
+
+    def reset(self):
+        """
+        Resetea la celda a su valor inicial (vacía).
+        """
+        self.value = 0

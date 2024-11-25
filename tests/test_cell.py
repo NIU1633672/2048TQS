@@ -17,3 +17,14 @@ def test_set_invalid_value():
     cell = Cell()
     with pytest.raises(ValueError):
         cell.set_value(8)  # Debe lanzar una excepción si el valor no es válido
+
+def test_reset_cell():
+    """
+    Verifica que una celda pueda ser reseteada a su estado inicial.
+    """
+    cell = Cell()
+    cell.set_value(2)  # Cambiar el valor de la celda
+    assert cell.value == 2  # Verificar que el valor ha cambiado
+    cell.reset()  # Resetear la celda
+    assert cell.value == 0  # Debe estar en el estado inicial
+    assert cell.is_empty()  # Debe estar vacía
