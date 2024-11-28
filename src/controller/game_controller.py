@@ -1,2 +1,20 @@
+# src/controller/game_controller.py
+from src.model.board import Board
+from src.view.game_view import GameView
+
 class GameController:
-    pass
+    def __init__(self, size):
+        self.board = Board(size)  # Crear tablero
+        self.view = GameView()    # Inicializar vista
+
+    def add_random_tile(self):
+        """Usa el método de Board para agregar una ficha aleatoria."""
+        self.board.add_random_tile()
+
+    def get_board(self):
+        """Devuelve el tablero actual."""
+        return self.board
+
+    def display(self):
+        """Pide a la vista que muestre el tablero actual."""
+        self.view.display_board(self.board)
