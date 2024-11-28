@@ -54,3 +54,20 @@ def test_add_random_tile():
         for cell in row:
             if not cell.is_empty():
                 assert cell.value in [2, 4]
+
+def test_move_left():
+    """
+    Verifica que el movimiento hacia la izquierda funcione correctamente.
+    """
+    controller = GameController(4)  # Tablero 4x4
+
+    # Configuramos un estado inicial del tablero
+    controller.board.grid[0][0].set_value(2)
+    controller.board.grid[0][1].set_value(2)
+
+    # Realizamos el movimiento hacia la izquierda
+    controller.move_left()
+
+    # Verificamos el resultado esperado
+    assert controller.board.grid[0][0].value == 4  # Se combinan
+    assert controller.board.grid[0][1].is_empty()  # La celda se vacía
