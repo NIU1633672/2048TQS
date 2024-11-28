@@ -1,4 +1,5 @@
 from src.model.cell import Cell
+import random
 
 class Board:
     """
