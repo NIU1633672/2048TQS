@@ -1,4 +1,5 @@
 import pytest
+from src.controller.game_controller import GameController
 from src.model.board import Board
 from src.model.cell import Cell
 
@@ -19,3 +20,37 @@ def test_initialize_board_with_empty_cells():
     for row in board.grid:
         for cell in row:
             assert cell.is_empty(), "Todas las celdas deben estar vacías al inicio"
+
+
+def test_add_random_tile():
+    """
+    Verifica que agregar una ficha aleatoria cambia una celda vacía
+    a tener un valor válido (2 o 4).
+    """
+    # Creamos el controlador, que tiene el tablero
+    controller = GameController(4)
+    
+    # Guardamos el estado inicial del tablero
+    initial_board = controller.get_board()
+    
+    # Contamos las celdas vacías antes de agregar la ficha
+    empty_cells_before = sum(
+        1 for row in initial_board.grid for cell in row if cell.is_empty()
+    )
+    
+    # Añadimos una ficha aleatoria
+    controller.add_random_tile()
+    
+    # Contamos las celdas vacías después de agregar la ficha
+    empty_cells_after = sum(
+        1 for row in initial_board.grid for cell in row if cell.is_empty()
+    )
+    
+    # Verificamos que el número de celdas vacías disminuyó en 1
+    assert empty_cells_after == empty_cells_before - 1
+
+    # Verificamos que la celda no vacía tiene un valor válido
+    for row in initial_board.grid:
+        for cell in row:
+            if not cell.is_empty():
+                assert cell.value in [2, 4]
