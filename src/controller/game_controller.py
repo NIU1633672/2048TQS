@@ -18,3 +18,9 @@ class GameController:
     def display(self):
         """Pide a la vista que muestre el tablero actual."""
         self.view.display_board(self.board)
+
+    def move_left(self):
+        """
+        Realiza un movimiento hacia la izquierda en el tablero.
+        """
+        self.board.move_left()
