@@ -27,3 +27,6 @@ class GameController:
 
     def move_right(self):
         self.board.move_right()
+
+    def move_up(self):
+        self.board.move_up()
