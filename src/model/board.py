@@ -60,30 +60,30 @@ class Board:
                 row[i].set_value(new_values[i])
 
     def move_right(self):
-    """
-    Mueve todas las fichas hacia la derecha, combinando las que sean iguales.
-    """
-    for row in self.grid:
-        # Extraemos los valores no vacíos
-        values = [cell.value for cell in row if not cell.is_empty()]
+        """
+        Mueve todas las fichas hacia la derecha, combinando las que sean iguales.
+        """
+        for row in self.grid:
+            # Extraemos los valores no vacíos
+            values = [cell.value for cell in row if not cell.is_empty()]
 
-        # Combinamos valores iguales
-        new_values = []
-        skip = False
-        for i in range(len(values) - 1, -1, -1):  # Iteramos de derecha a izquierda
-            if skip:
-                skip = False
-                continue
-            if i > 0 and values[i] == values[i - 1]:  # Comparar con la celda a la izquierda
-                new_values.append(values[i] * 2)
-                skip = True  # Saltar la siguiente celda
-            else:
-                new_values.append(values[i])
+            # Combinamos valores iguales
+            new_values = []
+            skip = False
+            for i in range(len(values) - 1, -1, -1):  # Iteramos de derecha a izquierda
+                if skip:
+                    skip = False
+                    continue
+                if i > 0 and values[i] == values[i - 1]:  # Comparar con la celda a la izquierda
+                    new_values.append(values[i] * 2)
+                    skip = True  # Saltar la siguiente celda
+                else:
+                    new_values.append(values[i])
 
-        # Rellenamos con ceros hasta completar el tamaño original de la fila
-        new_values.extend([0] * (self.size - len(new_values)))
+            # Rellenamos con ceros hasta completar el tamaño original de la fila
+            new_values.extend([0] * (self.size - len(new_values)))
 
-        # Actualizamos la fila del tablero en el orden correcto (de derecha a izquierda)
-        new_values.reverse()  # Invertir para colocar los valores de nuevo en la fila
-        for i in range(self.size):
-            row[i].set_value(new_values[i])
+            # Actualizamos la fila del tablero en el orden correcto (de derecha a izquierda)
+            new_values.reverse()  # Invertir para colocar los valores de nuevo en la fila
+            for i in range(self.size):
+                row[i].set_value(new_values[i])
