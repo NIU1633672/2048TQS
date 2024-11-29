@@ -91,3 +91,20 @@ def test_move_right():
     assert controller.board.grid[0][1].is_empty()  # Se espera que estas celdas estén vacías
     assert controller.board.grid[0][0].is_empty()
 
+def test_move_up():
+    """
+    Verifica que el movimiento hacia arriba funcione correctamente.
+    """
+    controller = GameController(4)  # Tablero 4x4
+
+    # Configuramos un estado inicial del tablero
+    controller.board.grid[2][0].set_value(2)
+    controller.board.grid[3][0].set_value(2)
+
+    # Realizamos el movimiento hacia arriba
+    controller.move_up()
+
+    # Verificamos el resultado esperado
+    assert controller.board.grid[0][0].value == 4  # Se combinan
+    assert controller.board.grid[2][0].is_empty()  # La celda se vacía
+    assert controller.board.grid[1][0].is_empty()  # La celda entre se vacía
