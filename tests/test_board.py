@@ -88,5 +88,6 @@ def test_move_right():
     # Verificamos el resultado esperado
     assert controller.board.grid[0][3].value == 4  # Se combinan
     assert controller.board.grid[0][2].is_empty()  # La celda se vacía
-    assert controller.board.grid[0][1].is_empty()
+    assert controller.board.grid[0][1].is_empty()  # Se espera que estas celdas estén vacías
     assert controller.board.grid[0][0].is_empty()
+
