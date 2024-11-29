@@ -24,3 +24,6 @@ class GameController:
         Realiza un movimiento hacia la izquierda en el tablero.
         """
         self.board.move_left()
+
+    def move_right(self):
+        self.board.move_right()

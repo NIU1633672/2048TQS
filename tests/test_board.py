@@ -71,3 +71,22 @@ def test_move_left():
     # Verificamos el resultado esperado
     assert controller.board.grid[0][0].value == 4  # Se combinan
     assert controller.board.grid[0][1].is_empty()  # La celda se vacía
+
+def test_move_right():
+    """
+    Verifica que el movimiento hacia la derecha funcione correctamente.
+    """
+    controller = GameController(4)  # Tablero 4x4
+
+    # Configuramos un estado inicial del tablero
+    controller.board.grid[0][2].set_value(2)
+    controller.board.grid[0][3].set_value(2)
+
+    # Realizamos el movimiento hacia la derecha
+    controller.move_right()
+
+    # Verificamos el resultado esperado
+    assert controller.board.grid[0][3].value == 4  # Se combinan
+    assert controller.board.grid[0][2].is_empty()  # La celda se vacía
+    assert controller.board.grid[0][1].is_empty()
+    assert controller.board.grid[0][0].is_empty()
