@@ -87,3 +87,31 @@ class Board:
             new_values.reverse()  # Invertir para colocar los valores de nuevo en la fila
             for i in range(self.size):
                 row[i].set_value(new_values[i])
+
+    def move_up(self):
+        """
+        Mueve todas las fichas hacia arriba, combinando las que sean iguales.
+        """
+        for col in range(self.size):
+            # Extraemos los valores no vacíos
+            values = [self.grid[row][col].value for row in range(self.size) if not self.grid[row][col].is_empty()]
+
+            # Combinamos valores iguales
+            new_values = []
+            skip = False
+            for i in range(len(values)):
+                if skip:
+                    skip = False
+                    continue
+                if i < len(values) - 1 and values[i] == values[i + 1]:
+                    new_values.append(values[i] * 2)
+                    skip = True  # Saltar la siguiente celda
+                else:
+                    new_values.append(values[i])
+
+            # Rellenamos con ceros hasta completar el tamaño original de la columna
+            new_values.extend([0] * (self.size - len(new_values)))
+
+            # Actualizamos la columna del tablero
+            for i in range(self.size):
+                self.grid[i][col].set_value(new_values[i]) 
