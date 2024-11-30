@@ -172,11 +172,11 @@ class Board:
                 if skip:
                     skip = False
                     continue
+                # Cambiamos la comparación para trabajar correctamente con los índices
                 if i < len(values) - 1 and values[i] == values[i + 1]:
                     new_values.append(values[i] * 2)
+                    self.last_move_score += values[i] * 2  # Sumar el valor combinado al puntaje
                     skip = True  # Saltar la siguiente celda
-                    combined_value = values[i] * 2
-                    self.last_move_score += combined_value
                 else:
                     new_values.append(values[i])
 
@@ -190,8 +190,9 @@ class Board:
 
             # Actualizamos la columna del tablero
             for i in range(self.size):
-                self.grid[self.size - 1 - i][col].set_value(new_values[i])  # Colocar desde abajo hacia arriba
+                self.grid[i][col].set_value(new_values[self.size - 1 - i])  # Colocar desde arriba hacia abajo
 
         return moved
+
 
 
