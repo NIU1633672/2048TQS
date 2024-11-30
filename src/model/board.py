@@ -194,58 +194,29 @@ class Board:
 
         return moved
     
-    def test_is_full_with_empty_cells():
-        board = Board()
-        # Asegurarse de que inicialmente no está lleno
-        assert not board.is_full()
-
-        # Llenar parcialmente el tablero
-        board.grid[0][0].set_value(2)
-        board.grid[1][1].set_value(4)
-        assert not board.is_full()
-
-        # Llenar todo el tablero
-        for row in board.grid:
+    def is_full(self):
+        """Verifica si todas las celdas del tablero están llenas."""
+        for row in self.grid:
             for cell in row:
-                cell.set_value(2)
-        assert board.is_full()
+                if cell.is_empty():
+                    return False
+        return True
 
-    def test_has_no_moves_possible_empty_board():
-        board = Board()
-        # Tablero inicial vacío debe tener movimientos posibles
-        assert board.has_moves()
-
-    def test_has_no_moves_possible_full_no_combinations():
-        board = Board()
-        # Llenar el tablero con valores sin combinaciones posibles
-        values = [
-            [2, 4, 8, 16],
-            [32, 64, 128, 256],
-            [512, 1024, 2, 4],
-            [8, 16, 32, 64],
-        ]
-        for i in range(4):
-            for j in range(4):
-                board.grid[i][j].set_value(values[i][j])
-
-        # Comprobar que el tablero no tiene movimientos posibles
-        assert not board.has_moves()
-
-    def test_has_moves_possible_with_combinations():
-        board = Board()
-        # Llenar el tablero con al menos una combinación posible
-        values = [
-            [2, 2, 4, 8],
-            [16, 32, 64, 128],
-            [256, 512, 1024, 2],
-            [4, 8, 16, 32],
-        ]
-        for i in range(4):
-            for j in range(4):
-                board.grid[i][j].set_value(values[i][j])
-
-        # Comprobar que hay movimientos posibles
-        assert board.has_moves()
+    def has_moves(self):
+        """Verifica si hay movimientos posibles en el tablero."""
+        # Comprobamos si hay celdas vacías
+        for row in self.grid:
+            for cell in row:
+                if cell.is_empty():
+                    return True
+        # Comprobamos combinaciones posibles
+        for i in range(self.size):
+            for j in range(self.size):
+                if j < self.size - 1 and self.grid[i][j].value == self.grid[i][j + 1].value:  # Combinaciones horizontales
+                    return True
+                if i < self.size - 1 and self.grid[i][j].value == self.grid[i + 1][j].value:  # Combinaciones verticales
+                    return True
+        return False
 
 
 
