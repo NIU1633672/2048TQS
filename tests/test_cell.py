@@ -15,8 +15,11 @@ def test_set_value():
 
 def test_set_invalid_value():
     cell = Cell()
-    with pytest.raises(ValueError):
-        cell.set_value(8)  # Debe lanzar una excepción si el valor no es válido
+    invalid_values = [-1, 3, 5, 6, 7, 9, 10, 12]  # Valores no válidos
+    for value in invalid_values:
+        with pytest.raises(ValueError):
+            cell.set_value(value)  # Debe lanzar una excepción si el valor no es válido
+
 
 def test_reset_cell():
     """

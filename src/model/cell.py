@@ -9,8 +9,8 @@ class Cell:
 
     def set_value(self, value):
         """Método para asignar un valor a la celda, solo 0, 2 o 4 son válidos."""
-        if value not in [0, 2, 4]:
-            raise ValueError("El valor debe ser 0, 2 o 4")
+        if value < 0 or (value != 0 and (value & (value - 1)) != 0):
+            raise ValueError("El valor debe ser 0 o una potencia de 2")
         self.value = value
 
     def reset(self):
