@@ -17,6 +17,12 @@ class Board:
         self.grid = [[Cell() for _ in range(size)] for _ in range(size)]
         self.last_move_score = 0  # Inicializamos el puntaje del último movimiento
 
+    def reset(self):
+        for row in self.grid:
+            for cell in row:
+                cell.reset()  # Asume que reset() en Cell establece el valor a 0 
+
+
     def add_random_tile(self):
         """
         Agrega una ficha aleatoria (2 o 4) en una celda vacía.
@@ -208,6 +214,7 @@ class Board:
         for row in self.grid:
             for cell in row:
                 if cell.is_empty():
+                    print(f"Found empty cell: {cell}")  # Para depuración
                     return True
         # Comprobamos combinaciones posibles
         for i in range(self.size):
