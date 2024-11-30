@@ -30,6 +30,9 @@ class GameController:
 
     def move_up(self):
         self.board.move_up()
+        
+    def move_down(self):
+        self.board.move_down()
 
     def play_turn(self, direction):
         move_successful = self.game.play_turn(direction)

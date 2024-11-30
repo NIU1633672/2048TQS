@@ -15,6 +15,7 @@ class Board:
         """
         self.size = size
         self.grid = [[Cell() for _ in range(size)] for _ in range(size)]
+        self.last_move_score = 0  # Inicializamos el puntaje del último movimiento
 
     def add_random_tile(self):
         """
@@ -34,7 +35,10 @@ class Board:
     def move_left(self):
         """
         Mueve todas las fichas hacia la izquierda, combinando las que sean iguales.
+        Devuelve True si hubo algún cambio, False en caso contrario.
         """
+        self.last_move_score = 0  # Inicializamos el puntaje del último movimiento
+        moved = False
         for row in self.grid:
             # Extraemos los valores no vacíos
             values = [cell.value for cell in row if not cell.is_empty()]
@@ -48,6 +52,8 @@ class Board:
                     continue
                 if i < len(values) - 1 and values[i] == values[i + 1]:
                     new_values.append(values[i] * 2)
+                    combined_value = values[i] * 2
+                    self.last_move_score += combined_value
                     skip = True  # Saltar la siguiente celda
                 else:
                     new_values.append(values[i])
@@ -55,14 +61,24 @@ class Board:
             # Rellenamos con ceros hasta completar el tamaño original de la fila
             new_values.extend([0] * (self.size - len(new_values)))
 
+            # Verificamos si hubo cambios
+            if new_values != [cell.value for cell in row]:
+                moved = True
+
             # Actualizamos la fila del tablero
             for i in range(self.size):
                 row[i].set_value(new_values[i])
 
+        return moved
+
+
     def move_right(self):
         """
         Mueve todas las fichas hacia la derecha, combinando las que sean iguales.
+        Devuelve True si hubo algún cambio, False en caso contrario.
         """
+        self.last_move_score = 0
+        moved = False
         for row in self.grid:
             # Extraemos los valores no vacíos
             values = [cell.value for cell in row if not cell.is_empty()]
@@ -76,6 +92,8 @@ class Board:
                     continue
                 if i > 0 and values[i] == values[i - 1]:  # Comparar con la celda a la izquierda
                     new_values.append(values[i] * 2)
+                    combined_value = values[i] * 2
+                    self.last_move_score += combined_value
                     skip = True  # Saltar la siguiente celda
                 else:
                     new_values.append(values[i])
@@ -85,13 +103,24 @@ class Board:
 
             # Actualizamos la fila del tablero en el orden correcto (de derecha a izquierda)
             new_values.reverse()  # Invertir para colocar los valores de nuevo en la fila
+
+            # Verificamos si hubo cambios
+            if new_values != [cell.value for cell in row]:
+                moved = True
+
             for i in range(self.size):
                 row[i].set_value(new_values[i])
+
+        return moved
+
 
     def move_up(self):
         """
         Mueve todas las fichas hacia arriba, combinando las que sean iguales.
+        Devuelve True si hubo algún cambio, False en caso contrario.
         """
+        self.last_move_score = 0
+        moved = False
         for col in range(self.size):
             # Extraemos los valores no vacíos
             values = [self.grid[row][col].value for row in range(self.size) if not self.grid[row][col].is_empty()]
@@ -105,6 +134,8 @@ class Board:
                     continue
                 if i < len(values) - 1 and values[i] == values[i + 1]:
                     new_values.append(values[i] * 2)
+                    combined_value = values[i] * 2
+                    self.last_move_score += combined_value
                     skip = True  # Saltar la siguiente celda
                 else:
                     new_values.append(values[i])
@@ -112,6 +143,55 @@ class Board:
             # Rellenamos con ceros hasta completar el tamaño original de la columna
             new_values.extend([0] * (self.size - len(new_values)))
 
+            # Verificamos si hubo cambios
+            current_column = [self.grid[row][col].value for row in range(self.size)]
+            if new_values != current_column:
+                moved = True
+
             # Actualizamos la columna del tablero
             for i in range(self.size):
-                self.grid[i][col].set_value(new_values[i]) 
+                self.grid[i][col].set_value(new_values[i])
+
+        return moved
+    
+    def move_down(self):
+        """
+        Mueve todas las fichas hacia abajo, combinando las que sean iguales.
+        Devuelve True si hubo algún cambio, False en caso contrario.
+        """
+        self.last_move_score = 0
+        moved = False
+        for col in range(self.size):
+            # Extraemos los valores no vacíos de la columna (de abajo hacia arriba)
+            values = [self.grid[row][col].value for row in range(self.size - 1, -1, -1) if not self.grid[row][col].is_empty()]
+
+            # Combinamos valores iguales
+            new_values = []
+            skip = False
+            for i in range(len(values)):
+                if skip:
+                    skip = False
+                    continue
+                if i < len(values) - 1 and values[i] == values[i + 1]:
+                    new_values.append(values[i] * 2)
+                    skip = True  # Saltar la siguiente celda
+                    combined_value = values[i] * 2
+                    self.last_move_score += combined_value
+                else:
+                    new_values.append(values[i])
+
+            # Rellenamos con ceros hasta completar el tamaño original de la columna
+            new_values.extend([0] * (self.size - len(new_values)))
+
+            # Verificamos si hubo cambios
+            current_column = [self.grid[row][col].value for row in range(self.size)]
+            if new_values[::-1] != current_column:  # Revertimos para comparar con la columna original
+                moved = True
+
+            # Actualizamos la columna del tablero
+            for i in range(self.size):
+                self.grid[self.size - 1 - i][col].set_value(new_values[i])  # Colocar desde abajo hacia arriba
+
+        return moved
+
+
