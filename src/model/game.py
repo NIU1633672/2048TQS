@@ -1,8 +1,11 @@
 from src.model.board import Board
 
 class Game:
-    def __init__(self, size):
-        self.board = Board(size)
+    def __init__(self, size, board=None):
+        if board is None:
+            self.board = Board(size)
+        else:
+            self.board = board
         self.score = 0
 
     def play_turn(self, direction):
@@ -30,4 +33,12 @@ class Game:
         # Añadimos una nueva ficha
         self.board.add_random_tile()
 
+        return True
+
+    def is_game_over(self):
+        # Si hay movimientos disponibles, el juego no ha terminado
+        if self.board.has_moves():
+            return False
+        
+        # Si no hay movimientos disponibles, el juego ha terminado
         return True

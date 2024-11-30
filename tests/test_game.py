@@ -1,5 +1,6 @@
 import pytest
 from src.model.game import Game
+from src.model.board import Board
 
 def test_play_turn():
     """
@@ -33,7 +34,7 @@ def test_play_turn():
 
 def test_is_game_over_with_full_board_no_moves():
     board = Board(size=4)
-    game = Game(board=board)
+    game = Game(size=4, board=board)
     values = [
         [2, 4, 8, 16],
         [32, 64, 128, 256],
@@ -47,13 +48,13 @@ def test_is_game_over_with_full_board_no_moves():
 
 def test_is_game_over_with_empty_cells():
     board = Board(size=4)
-    game = Game(board=board)
+    game = Game(size=4, board=board)
     board.grid[0][0].set_value(2)  # Una celda con valor, las demás vacías
     assert not game.is_game_over()  # El juego no termina con celdas vacías
 
 def test_is_game_over_with_moves_available():
     board = Board(size=4)
-    game = Game(board=board)
+    game = Game(size=4, board=board)
     values = [
         [2, 2, 4, 8],
         [16, 32, 64, 128],
