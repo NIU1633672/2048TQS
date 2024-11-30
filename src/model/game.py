@@ -40,5 +40,11 @@ class Game:
         if self.board.has_moves():
             return False
         
+        # Comprobar si hay alguna celda con valor 2048 (victoria)
+        for row in self.board.grid:
+            for cell in row:
+                if cell.value == 2048:
+                    return True  # El juego se ha ganado
+        
         # Si no hay movimientos disponibles, el juego ha terminado
         return True
