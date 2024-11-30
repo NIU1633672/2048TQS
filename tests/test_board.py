@@ -124,3 +124,45 @@ def test_move_down():
     assert controller.board.grid[3][0].value == 4
     # Verificamos que el valor en la fila 2, columna 0 sea 0 (ya que se combinó)
     assert controller.board.grid[2][0].value == 0
+
+def test_is_full_with_empty_cells():
+    board = Board(size=4)
+    board.grid[0][0].set_value(2)  # Una celda con valor, las demás vacías
+    assert not board.is_full()  # El tablero no está lleno
+
+def test_is_full_with_all_cells_filled():
+    board = Board(size=4)
+    for row in board.grid:
+        for cell in row:
+            cell.set_value(2)  # Llenamos todas las celdas
+    assert board.is_full()  # El tablero está lleno
+
+def test_has_no_moves_possible_empty_board():
+    board = Board(size=4)
+    assert not board.has_moves()  # Un tablero vacío no tiene movimientos
+
+def test_has_no_moves_possible_full_no_combinations():
+    board = Board(size=4)
+    values = [
+        [2, 4, 8, 16],
+        [32, 64, 128, 256],
+        [512, 1024, 2048, 4096],
+        [8192, 16384, 32768, 65536],
+    ]
+    for i in range(4):
+        for j in range(4):
+            board.grid[i][j].set_value(values[i][j])
+    assert not board.has_moves()  # El tablero lleno y sin combinaciones posibles
+
+def test_has_moves_possible_with_combinations():
+    board = Board(size=4)
+    values = [
+        [2, 2, 4, 8],
+        [16, 32, 64, 128],
+        [256, 512, 1024, 2048],
+        [2, 4, 8, 16],
+    ]
+    for i in range(4):
+        for j in range(4):
+            board.grid[i][j].set_value(values[i][j])
+    assert board.has_moves()  # Hay combinaciones posibles (dos 2 en la primera fila)
