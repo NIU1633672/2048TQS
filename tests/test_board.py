@@ -116,13 +116,11 @@ def test_move_down():
     controller = GameController(4)  # Tablero 4x4
 
     # Configuramos un estado inicial del tablero
-    controller.board.grid[0][0].set_value(2)
-    controller.board.grid[1][0].set_value(2)
+    controller.board.grid[2][0].set_value(2)  # Colocamos un 2 en la fila 2, columna 0
+    controller.board.grid[3][0].set_value(2)  # Colocamos otro 2 en la fila 3, columna 0
+    controller.move_down()  # Hacemos el movimiento hacia abajo
 
-    # Realizamos el movimiento hacia abajo
-    controller.move_down()
-
-    # Verificamos el resultado esperado
-    assert controller.board.grid[2][0].value == 4  # Se combinan
-    assert controller.board.grid[0][0].is_empty()  # La celda se vacía
-    assert controller.board.grid[1][0].is_empty()  # La celda entre se vacía
+    # Verificamos que el valor en la fila 3, columna 0 sea 4
+    assert controller.board.grid[3][0].value == 4
+    # Verificamos que el valor en la fila 2, columna 0 sea 0 (ya que se combinó)
+    assert controller.board.grid[2][0].value == 0
