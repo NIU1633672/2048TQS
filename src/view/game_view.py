@@ -14,3 +14,9 @@ class GameView:
     def display_message(self, message):
         """Muestra un mensaje en la consola."""
         print(message)
+        
+    def display_end_message(self, game_status):
+        if game_status == "won":
+            print("¡Has ganado!")
+        elif game_status == "lost":
+            print("Juego terminado")

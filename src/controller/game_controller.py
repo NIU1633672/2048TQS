@@ -54,5 +54,12 @@ class GameController:
                     print("No valid moves available!")
                 else:
                     self.add_random_tile()  # Agregar una ficha después de un movimiento exitoso
+            
+                # Verificar el estado del juego después del movimiento
+                game_status = self.game.check_game_status()
+                if game_status in ["won", "lost"]:
+                    self.view.display_end_message(game_status)
+                    break  # Salir del bucle si el juego ha terminado
+                
             else:
                 print("Invalid direction! Please use left, right, up, down.")
