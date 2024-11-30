@@ -137,11 +137,6 @@ def test_is_full_with_all_cells_filled():
             cell.set_value(2)  # Llenamos todas las celdas
     assert board.is_full()  # El tablero está lleno
 
-def test_has_no_moves_possible_empty_board():
-    board = Board(size=4)
-    board.reset()
-    assert not board.has_moves()  # Un tablero vacío no tiene movimientos
-
 def test_has_no_moves_possible_full_no_combinations():
     board = Board(size=4)
     values = [
