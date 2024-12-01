@@ -6,17 +6,20 @@ class Board:
     Clase que representa un tablero de juego para 2048.
     """
 
-    def __init__(self, size):
+    def __init__(self, size=4):
         """
         Inicializa un tablero vacío de tamaño `size x size`.
         Cada posición del tablero contiene una instancia de la clase Cell.
 
         :param size: Dimensión del tablero (número de filas y columnas).
         """
+        if size != 4:
+            raise ValueError("El tamaño del tablero debe ser 4x4.")
+        
         self.size = size
         self.grid = [[Cell() for _ in range(size)] for _ in range(size)]
         self.last_move_score = 0  # Inicializamos el puntaje del último movimiento
-
+        
     def reset(self):
         for row in self.grid:
             for cell in row:
