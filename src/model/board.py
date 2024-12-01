@@ -11,7 +11,7 @@ class Board:
         Inicializa un tablero vacío de tamaño `size x size`.
         Cada posición del tablero contiene una instancia de la clase Cell.
 
-        :param size: Dimensión del tablero (número de filas y columnas).
+        size: Dimensión del tablero (número de filas y columnas).
         """
         if size != 4:
             raise ValueError("El tamaño del tablero debe ser 4x4.")

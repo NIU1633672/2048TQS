@@ -65,3 +65,23 @@ def test_is_game_over_with_moves_available():
         for j in range(4):
             board.grid[i][j].set_value(values[i][j])
     assert not game.is_game_over()  # Hay movimientos posibles (dos 2 en la primera fila)
+    
+# Particions equivalents, valors valids / no valids
+
+def test_play_turn_valid_directions():
+    """
+    Prova que les direccions vàlides executen moviments correctament.
+    """
+    game = Game(4)
+    for direction in ["left", "right", "up", "down"]:
+        assert game.play_turn(direction) in [True, False]  # Retorna True si hi ha canvi
+        
+def test_play_turn_invalid_directions():
+    """
+    Prova que les direccions no vàlides llencen una excepció.
+    """
+    game = Game(4)
+    invalid_directions = ["diagonal", "", 123, None]
+    for direction in invalid_directions:
+        with pytest.raises(ValueError):
+            game.play_turn(direction)
