@@ -33,11 +33,36 @@ def test_play_turn():
     assert game.board.grid[0][0].value == 4
     assert game.board.grid[0][1].is_empty()
 
+
+
+    
+# Valors límit i frontera
+
+# Valor limit / frontera: tauler ple amb una cel·la buida
+
+def test_board_full_moves():
+    board = Board(size=4)
+    game = Game(size=4, board=board)
+    values = [
+        [2, 4, 2, 4],
+        [4, 2, 4, 2],
+        [2, 4, 2, 4],
+        [4, 2, 0, 2],
+    ]
+    for i in range(4):
+        for j in range(4):
+            board.grid[i][j].set_value(values[i][j])
+    assert not game.is_game_over()  # Hay movimientos posibles
+
+# Valor limit / frontera: tauler inicial amb només una cel·la
+
 def test_is_game_over_with_empty_cells():
     board = Board(size=4)
     game = Game(size=4, board=board)
     board.grid[0][0].set_value(2)  # Una celda con valor, las demás vacías
     assert not game.is_game_over()  # El juego no termina con celdas vacías
+
+# Valor limit / frontera: tauler completament ple pero hi ha almenys un moviment possible
 
 def test_is_game_over_with_moves_available():
     board = Board(size=4)
@@ -52,8 +77,6 @@ def test_is_game_over_with_moves_available():
         for j in range(4):
             board.grid[i][j].set_value(values[i][j])
     assert not game.is_game_over()  # Hay movimientos posibles (dos 2 en la primera fila)
-    
-# Valors límit i frontera
 
 # Cas limit on hi ha cel·la amb valor 2048
 
