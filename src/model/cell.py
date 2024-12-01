@@ -18,3 +18,7 @@ class Cell:
         Resetea la celda a su valor inicial (vacía).
         """
         self.value = 0
+        
+    
+    def get_value(self):  # Método que devuelve el valor de la celda
+        return self.value
