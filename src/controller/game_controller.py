@@ -5,16 +5,36 @@ from src.model.game import Game
 class GameController:
     def __init__(self, size):
         self.game = Game(size)  # Crear el juego
-        self.view = GameView()  # Inicializar vista        
+        self.view = GameView()  # Inicializar vista
+        self.board = Board(size)
 
     def add_random_tile(self):
         """Usa el método de Board para agregar una ficha aleatoria."""
         self.game.board.add_random_tile()
 
+    def get_board(self):
+        """Devuelve el tablero actual."""
+        return self.game.board
+
     def display(self):
         """Pide a la vista que muestre el tablero actual."""
-        self.view.display_board(self.game.board)      
-    
+        self.view.display_board(self.game.board)
+        
+    def move_left(self):
+        """
+        Realiza un movimiento hacia la izquierda en el tablero.
+        """
+        self.board.move_left()
+
+    def move_right(self):
+        self.board.move_right()
+
+    def move_up(self):
+        self.board.move_up()
+        
+    def move_down(self):
+        self.board.move_down()
+
     def play_turn(self, direction):
         """Realiza un movimiento en la dirección especificada."""
         return self.game.play_turn(direction)
