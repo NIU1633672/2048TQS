@@ -50,3 +50,5 @@ class Game:
             for cell in row:
                 if cell.value == 2048:
                     return True  # El juego se ha ganado
+                
+    

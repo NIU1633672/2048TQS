@@ -2,6 +2,7 @@ import pytest
 from src.model.game import Game
 from src.model.board import Board
 from src.model.cell import Cell
+from unittest.mock import patch
 
 def test_play_turn():
     """
@@ -124,3 +125,40 @@ def test_play_turn_invalid_directions():
     for direction in invalid_directions:
         with pytest.raises(ValueError):
             game.play_turn(direction)
+            
+@pytest.mark.parametrize("initial_grid, expected_grid, direction", [
+    ([[0, 2, 2, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], 
+      [[4, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], "left"),
+    
+    ([[0, 2, 2, 0], [0, 0, 0, 0], [0, 0, 0, 0], [2, 0, 0, 0]], 
+      [[4, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [2, 0, 0, 0]], "left"),
+    
+    ([[0, 0, 2, 2], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], 
+      [[0, 0, 0, 4], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], "right"),
+    
+    ([[2, 0, 0, 0], [2, 0, 0, 0], [4, 0, 0, 0], [0, 0, 0, 0]], 
+      [[4, 0, 0, 0], [4, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], "up"),
+    
+    ([[0, 0, 0, 0], [0, 2, 0, 0], [0, 2, 0, 0], [0, 0, 0, 0]], 
+      [[0, 4, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], "up"),
+    
+    ([[2, 0, 0, 0], [2, 0, 0, 0], [0, 0, 0, 0], [4, 0, 0, 0]], 
+      [[0, 0, 0, 0], [0, 0, 0, 0], [4, 0, 0, 0], [4, 0, 0, 0]], "down"),
+    
+     ([[0, 0, 0, 0], [2, 0, 0, 0], [2, 0, 0, 0], [4, 0, 0, 0]], 
+      [[0, 0, 0, 0], [0, 0, 0, 0], [4, 0, 0, 0], [4, 0, 0, 0]], "down"),
+])
+@patch.object(Board, 'add_random_tile')  # Mock para evitar generación aleatoria
+def test_play_turn_pairwise(mock_add_random_tile, initial_grid, expected_grid, direction):
+    board = Board()
+    for i in range(board.size):
+        for j in range(board.size):
+            board.grid[i][j].set_value(initial_grid[i][j])
+    game = Game(size=4, board=board)
+
+    # Llamar a la función de juego
+    game.play_turn(direction)
+    
+    # Comprobar el estado del tablero después del movimiento
+    assert [[cell.value for cell in row] for row in game.board.grid] == expected_grid
+
