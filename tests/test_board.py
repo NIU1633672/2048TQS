@@ -77,6 +77,58 @@ def test_move_down():
     assert controller.game.board.grid[0][0].get_value() == 0  # La celda (0, 0) debe estar vacía
 
 
+
+      
+# Test valores frontera y valores límite
+    
+def test_board_size_values():
+    """
+    Verifica el comportamiento del tamaño del tablero en valores frontera y límites.
+    """
+    
+    # Valor frontera o único valor permitido (4)   
+
+    board_max = Board(4)  # Frontera superior válida
+    assert len(board_max.grid) == 4     
+
+    # Valores límite inferiores (no válidos)
+    with pytest.raises(ValueError):  
+        Board(3)  # Menor que el mínimo válido
+
+    # Valores límite superiores (no válidos)
+    with pytest.raises(ValueError):  
+        Board(5)  # Mayor que el máximo válido
+        
+# Proves de caixa blanca, decision coverage
+
+def test_move_left_combination():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(2)
+    board.move_left()
+    assert board.grid[0][0].get_value() == 4  # Se combinan las celdas
+
+def test_move_left_no_combination():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(4)
+    board.move_left()
+    assert board.grid[0][0].get_value() == 2  # No se combinan
+    
+def test_move_up_combination():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[1][0].set_value(2)
+    assert board.move_up()  # Debería devolver True
+    assert board.grid[0][0].get_value() == 4  # Las celdas deben combinarse
+
+def test_move_up_no_combination():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[1][0].set_value(4)
+    assert not board.move_up()  # Debería devolver False, sin cambios
+    assert board.grid[0][0].get_value() == 2  # Sin cambios
+
 def test_is_full_with_empty_cells():
     board = Board(size=4)
     board.grid[0][0].set_value(2)  # Una celda con valor, las demás vacías
@@ -114,23 +166,3 @@ def test_has_moves_possible_with_combinations():
         for j in range(4):
             board.grid[i][j].set_value(values[i][j])
     assert board.has_moves()  # Hay combinaciones posibles (dos 2 en la primera fila)
-      
-# Test valores frontera y valores límite
-    
-def test_board_size_values():
-    """
-    Verifica el comportamiento del tamaño del tablero en valores frontera y límites.
-    """
-    
-    # Valor frontera o único valor permitido (4)   
-
-    board_max = Board(4)  # Frontera superior válida
-    assert len(board_max.grid) == 4     
-
-    # Valores límite inferiores (no válidos)
-    with pytest.raises(ValueError):  
-        Board(3)  # Menor que el mínimo válido
-
-    # Valores límite superiores (no válidos)
-    with pytest.raises(ValueError):  
-        Board(5)  # Mayor que el máximo válido
