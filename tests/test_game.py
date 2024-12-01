@@ -64,7 +64,7 @@ def test_game_over_victory():
     board = Board(4)
     board.grid[0][0].set_value(2048)  # Simula una victòria
     game = Game(4, board)
-    assert game.is_game_over()
+    assert game.is_victory()
 
 # Valor limit i frontera: Tauler completament ple sense moviments possibles
 def test_is_game_over_with_full_board_no_moves():
