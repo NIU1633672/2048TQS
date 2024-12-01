@@ -227,3 +227,27 @@ def test_play_turn_valid_move():
         not cell.is_empty() for row in game.board.grid for cell in row
     )
     assert non_empty_cells == 2  # Se añade una nueva ficha
+    
+# Loop testing
+
+def test_is_victory_no_iterations():
+    board = Board(size=4)  # Tablero 4x4 vacío
+    game = Game(size=4, board=board)
+    assert not game.is_victory()  # Iteraciones: 0 (sin 2048)
+
+def test_is_victory_one_iteration():
+    board = Board(size=4)
+    board.grid[0][0].set_value(2048)  # Victoria en la primera celda
+    game = Game(size=4, board=board)
+    assert game.is_victory()  # Iteraciones: 1
+
+def test_is_victory_multiple_iterations():
+    board = Board(size=4)
+    board.grid[1][1].set_value(2048)  # Victoria en otra celda
+    game = Game(size=4, board=board)
+    assert game.is_victory()  # Iteraciones: multiples, pero se detiene en la primera coincidencia
+
+def test_is_victory_no_victory():
+    board = Board(size=4)
+    game = Game(size=4, board=board)  # Ninguna celda tiene 2048
+    assert not game.is_victory()  # Iteraciones: 16 (4x4)
