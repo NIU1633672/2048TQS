@@ -213,8 +213,7 @@ class Board:
         # Comprobamos si hay celdas vacías
         for row in self.grid:
             for cell in row:
-                if cell.is_empty():
-                    print(f"Found empty cell: {cell}")  # Para depuración
+                if cell.is_empty():                    
                     return True
         # Comprobamos combinaciones posibles
         for i in range(self.size):
