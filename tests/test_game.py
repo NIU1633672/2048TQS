@@ -228,7 +228,7 @@ def test_play_turn_valid_move():
     )
     assert non_empty_cells == 2  # Se añade una nueva ficha
     
-# Loop testing
+# Loop testing bucle simple
 
 def test_is_victory_no_iterations():
     board = Board(size=4)  # Tablero 4x4 vacío
