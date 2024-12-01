@@ -212,19 +212,29 @@ class Board:
         return True
 
     def has_moves(self):
-        """Verifica si hay movimientos posibles en el tablero."""
-        # Comprobamos si hay celdas vacías
-        for row in self.grid:
-            for cell in row:
-                if cell.is_empty():                    
-                    return True
-        # Comprobamos combinaciones posibles
+        """
+        Verifica si hay movimientos posibles en el tablero:
+        - Celdas vacías.
+        - Combinaciones posibles entre celdas adyacentes.
+        """
+        # Verifica si hay celdas vacías
+        if not self.is_full():
+            return True
+
+        # Verifica si hay combinaciones posibles
         for i in range(self.size):
             for j in range(self.size):
-                if j < self.size - 1 and self.grid[i][j].value == self.grid[i][j + 1].value:  # Combinaciones horizontales
+                current_value = self.grid[i][j].value
+
+                # Verifica combinaciones horizontales
+                if j + 1 < self.size and self.grid[i][j + 1].value == current_value:
                     return True
-                if i < self.size - 1 and self.grid[i][j].value == self.grid[i + 1][j].value:  # Combinaciones verticales
+
+                # Verifica combinaciones verticales
+                if i + 1 < self.size and self.grid[i + 1][j].value == current_value:
                     return True
+
+        # Si no hay combinaciones posibles
         return False
 
 
