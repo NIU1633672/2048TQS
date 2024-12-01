@@ -2,6 +2,7 @@ import pytest
 from src.controller.game_controller import GameController
 from src.model.board import Board
 from src.model.cell import Cell
+from src.model.game import Game
 
 def test_initialize_board_with_cells():
     """
@@ -169,3 +170,26 @@ def test_has_moves_possible_with_combinations():
         for j in range(4):
             board.grid[i][j].set_value(values[i][j])
     assert board.has_moves()  # Hay combinaciones posibles (dos 2 en la primera fila)
+
+# Loop testing
+
+def test_has_moves_no_iterations():
+    board = Board(size=4)  # Tablero 4x4 vacío
+    game = Game(size=4, board=board)
+    assert not board.has_moves()  # Iteraciones: 0 (no hay pares de celdas adyacentes)
+
+def test_has_moves_one_iteration():
+    board = Board(size=4)
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(2)  # Un movimiento posible
+    game = Game(size=4, board=board)
+    assert board.has_moves()  # Iteraciones: 1
+
+def test_has_moves_multiple_iterations():
+    board = Board(size=4)
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(2)  # Un movimiento posible
+    board.grid[1][0].set_value(4)
+    board.grid[1][1].set_value(4)  # Otro movimiento posible
+    game = Game(size=4, board=board)
+    assert board.has_moves()  # Iteraciones: 3 filas x 3 comparaciones

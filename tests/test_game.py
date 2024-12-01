@@ -251,3 +251,30 @@ def test_is_victory_no_victory():
     board = Board(size=4)
     game = Game(size=4, board=board)  # Ninguna celda tiene 2048
     assert not game.is_victory()  # Iteraciones: 16 (4x4)
+    
+# Loop testing bucle anidado
+
+def test_is_game_over_no_iterations():
+    board = Board(size=4)  # Tablero 4x4 lleno
+    for i in range(4):
+        for j in range(4):
+            board.grid[i][j].set_value(2)  # Ninguna celda vacía
+    game = Game(size=4, board=board)
+    assert not game.is_game_over()  # Iteraciones: 16 (sin ceros)
+
+def test_is_game_over_one_iteration():
+    board = Board(size=4)
+    for i in range(4):
+        for j in range(4):
+            board.grid[i][j].set_value(2)  # Rellenar todo menos una celda
+    board.grid[0][0].set_value(0)  # Una celda vacía
+    game = Game(size=4, board=board)
+    assert not game.is_game_over()  # Iteraciones: 1
+
+def test_is_game_over_multiple_iterations():
+    board = Board(size=4)
+    for i in range(4):
+        for j in range(4):
+            board.grid[i][j].set_value(2)  # Rellenar todo
+    game = Game(size=4, board=board)
+    assert not game.is_game_over()  # Iteraciones: 16 (sin ceros)
