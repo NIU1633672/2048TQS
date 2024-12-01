@@ -278,3 +278,24 @@ def test_is_game_over_multiple_iterations():
             board.grid[i][j].set_value(2)  # Rellenar todo
     game = Game(size=4, board=board)
     assert not game.is_game_over()  # Iteraciones: 16 (sin ceros)
+    
+# Bucle anidado loop testing 
+
+def test_play_turn_no_iterations():
+    board = Board(size=4)  # Tablero 4x4 vacío
+    game = Game(size=4, board=board)
+    assert not game.play_turn("left")  # Sin iteraciones
+
+def test_play_turn_one_iteration():
+    board = Board(size=4)
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(2)  # Solo una fila con movimiento válido
+    game = Game(size=4, board=board)
+    assert game.play_turn("left")  # Iteraciones: 1 fila
+
+def test_play_turn_multiple_iterations():
+    board = Board(size=4)
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(4)  # Varias iteraciones posibles
+    game = Game(size=4, board=board)
+    assert not game.play_turn("up")  # Iteraciones: varias filas y columnas
