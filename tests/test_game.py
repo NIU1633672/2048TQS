@@ -162,7 +162,7 @@ def test_play_turn_pairwise(mock_add_random_tile, initial_grid, expected_grid, d
     # Comprobar el estado del tablero después del movimiento
     assert [[cell.value for cell in row] for row in game.board.grid] == expected_grid
 
-# Condition coverage
+# Condition coverage and path coverage
 
 def test_is_game_over_moves_available():
     board = Board(size=4)
@@ -195,3 +195,35 @@ def test_is_victory_no_victory():
     board.grid[0][0].set_value(2)  # Ninguna celda con 2048
     game = Game(size=4, board=board)
     assert not game.is_victory()  # cell.value == 2048 sale False -> No hay victoria
+    
+# Path coverage
+
+def test_play_turn_invalid_direction():
+    game = Game(size=4)
+    with pytest.raises(ValueError):
+        game.play_turn("diagonal")  # Camino 1: dirección no válida
+
+def test_play_turn_no_valid_move():
+    board = Board(size=4)
+    game = Game(size=4, board=board)
+    values = [
+        [2, 4, 2, 4],
+        [4, 2, 4, 2],
+        [2, 4, 2, 4],
+        [4, 2, 4, 2],
+    ]
+    for i in range(4):
+        for j in range(4):
+            board.grid[i][j].set_value(values[i][j])  # Tablero sin movimientos
+    assert not game.play_turn("left")  # Camino 2: movimiento inválido
+
+def test_play_turn_valid_move():
+    board = Board(size=4)
+    game = Game(size=4, board=board)
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(2)
+    assert game.play_turn("left")  # Camino 3: movimiento válido
+    non_empty_cells = sum(
+        not cell.is_empty() for row in game.board.grid for cell in row
+    )
+    assert non_empty_cells == 2  # Se añade una nueva ficha
