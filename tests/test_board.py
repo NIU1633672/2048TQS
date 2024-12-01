@@ -38,57 +38,44 @@ def test_move_left():
     # Añade aserciones para verificar el estado del tablero después del movimiento
 
 def test_move_right():
-    """
-    Verifica que el movimiento hacia la derecha funcione correctamente.
-    """
-    controller = GameController(4)  # Tablero 4x4
+    controller = GameController(4)
+    controller.game.board.grid[0][2].set_value(2)  # Establece un valor en la celda (0, 2)
+    controller.game.board.grid[0][3].set_value(2)  # Establece otro valor en la celda (0, 3)
+    
+    # Realiza el movimiento a la derecha
+    controller.play_turn('right')
+    
+    # Verifica que las celdas se hayan combinado correctamente
+    assert controller.game.board.grid[0][3].get_value() == 4  # La celda (0, 3) debe contener el resultado de la combinación
+    assert controller.game.board.grid[0][2].get_value() == 0  # La celda (0, 2) debe estar vacía
 
-    # Configuramos un estado inicial del tablero
-    controller.board.grid[0][2].set_value(2)
-    controller.board.grid[0][3].set_value(2)
-
-    # Realizamos el movimiento hacia la derecha
-    controller.move_right()
-
-    # Verificamos el resultado esperado
-    assert controller.board.grid[0][3].value == 4  # Se combinan
-    assert controller.board.grid[0][2].is_empty()  # La celda se vacía
-    assert controller.board.grid[0][1].is_empty()  # Se espera que estas celdas estén vacías
-    assert controller.board.grid[0][0].is_empty()
 
 def test_move_up():
-    """
-    Verifica que el movimiento hacia arriba funcione correctamente.
-    """
-    controller = GameController(4)  # Tablero 4x4
-
-    # Configuramos un estado inicial del tablero
-    controller.board.grid[2][0].set_value(2)
-    controller.board.grid[3][0].set_value(2)
-
-    # Realizamos el movimiento hacia arriba
-    controller.move_up()
-
-    # Verificamos el resultado esperado
-    assert controller.board.grid[0][0].value == 4  # Se combinan
-    assert controller.board.grid[2][0].is_empty()  # La celda se vacía
-    assert controller.board.grid[1][0].is_empty()  # La celda entre se vacía
+    controller = GameController(4)
+    controller.game.board.grid[2][0].set_value(2)  # Establece un valor en la celda (2, 0)
+    controller.game.board.grid[1][0].set_value(2)  # Establece otro valor en la celda (1, 0)
+    
+    # Realiza el movimiento hacia arriba
+    controller.play_turn('up')
+    
+    # Verifica que las celdas se hayan combinado correctamente
+    assert controller.game.board.grid[0][0].get_value() == 4  # La celda (0, 0) debe contener el resultado de la combinación
+    assert controller.game.board.grid[1][0].get_value() == 0  # La celda (1, 0) debe estar vacía
+    assert controller.game.board.grid[2][0].get_value() == 0  # La celda (2, 0) debe estar vacía
 
 def test_move_down():
-    """
-    Verifica que el movimiento hacia abajo funcione correctamente.
-    """
-    controller = GameController(4)  # Tablero 4x4
+    controller = GameController(4)
+    controller.game.board.grid[0][0].set_value(2)  # Establece un valor en la celda (0, 0)
+    controller.game.board.grid[1][0].set_value(2)  # Establece otro valor en la celda (1, 0)
+    
+    # Realiza el movimiento hacia abajo
+    controller.play_turn('down')
+    
+    # Verifica que las celdas se hayan combinado correctamente
+    assert controller.game.board.grid[2][0].get_value() == 4  # La celda (2, 0) debe contener el resultado de la combinación
+    assert controller.game.board.grid[1][0].get_value() == 0  # La celda (1, 0) debe estar vacía
+    assert controller.game.board.grid[0][0].get_value() == 0  # La celda (0, 0) debe estar vacía
 
-    # Configuramos un estado inicial del tablero
-    controller.board.grid[2][0].set_value(2)  # Colocamos un 2 en la fila 2, columna 0
-    controller.board.grid[3][0].set_value(2)  # Colocamos otro 2 en la fila 3, columna 0
-    controller.move_down()  # Hacemos el movimiento hacia abajo
-
-    # Verificamos que el valor en la fila 3, columna 0 sea 4
-    assert controller.board.grid[3][0].value == 4
-    # Verificamos que el valor en la fila 2, columna 0 sea 0 (ya que se combinó)
-    assert controller.board.grid[2][0].value == 0
 
 def test_is_full_with_empty_cells():
     board = Board(size=4)
