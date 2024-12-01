@@ -145,6 +145,8 @@ def test_is_full_with_all_cells_filled():
             cell.set_value(2)  # Llenamos todas las celdas
     assert board.is_full()  # El tablero está lleno
 
+# Esta también es loop testing con 0 iteraciones
+
 def test_has_no_moves_possible_full_no_combinations():
     board = Board(size=4)
     values = [
@@ -172,11 +174,6 @@ def test_has_moves_possible_with_combinations():
     assert board.has_moves()  # Hay combinaciones posibles (dos 2 en la primera fila)
 
 # Loop testing
-
-def test_has_moves_no_iterations():
-    board = Board(size=4)  # Tablero 4x4 vacío
-    game = Game(size=4, board=board)
-    assert not board.has_moves()  # Iteraciones: 0 (no hay pares de celdas adyacentes)
 
 def test_has_moves_one_iteration():
     board = Board(size=4)

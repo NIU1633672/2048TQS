@@ -279,7 +279,7 @@ def test_is_game_over_multiple_iterations():
     game = Game(size=4, board=board)
     assert not game.is_game_over()  # Iteraciones: 16 (sin ceros)
     
-# Bucle anidado loop testing 
+# Bucle anidado loop testing (play_turn llama a movimientos, que son bucles anidados)
 
 def test_play_turn_no_iterations():
     board = Board(size=4)  # Tablero 4x4 vacío
