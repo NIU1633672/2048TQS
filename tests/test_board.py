@@ -99,7 +99,7 @@ def test_board_size_values():
     with pytest.raises(ValueError):  
         Board(5)  # Mayor que el máximo válido
         
-# Proves de caixa blanca, decision coverage
+# Proves de caixa blanca, decision coverage.
 
 def test_move_left_combination():
     board = Board()
@@ -128,6 +128,9 @@ def test_move_up_no_combination():
     board.grid[1][0].set_value(4)
     assert not board.move_up()  # Debería devolver False, sin cambios
     assert board.grid[0][0].get_value() == 2  # Sin cambios
+
+
+# Estas dos también son condition coverage 
 
 def test_is_full_with_empty_cells():
     board = Board(size=4)

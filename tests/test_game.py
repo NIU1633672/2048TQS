@@ -162,3 +162,36 @@ def test_play_turn_pairwise(mock_add_random_tile, initial_grid, expected_grid, d
     # Comprobar el estado del tablero después del movimiento
     assert [[cell.value for cell in row] for row in game.board.grid] == expected_grid
 
+# Condition coverage
+
+def test_is_game_over_moves_available():
+    board = Board(size=4)
+    board.grid[0][0].set_value(2)  # Hay movimientos disponibles
+    game = Game(size=4, board=board)
+    assert not game.is_game_over()  # has_moves devuelve True -> Juego no terminado
+
+def test_is_game_over_no_moves():
+    board = Board(size=4)
+    values = [
+        [2, 4, 8, 16],
+        [32, 64, 128, 256],
+        [512, 1024, 2048, 2],
+        [4, 8, 16, 32]
+    ]
+    for i in range(4):
+        for j in range(4):
+            board.grid[i][j].set_value(values[i][j])  # Sin movimientos disponibles
+    game = Game(size=4, board=board)
+    assert game.is_game_over()  # has_moves devuelve False -> Juego terminado
+    
+def test_is_victory_with_victory():
+    board = Board(size=4)
+    board.grid[0][0].set_value(2048)  # Una celda con 2048
+    game = Game(size=4, board=board)
+    assert game.is_victory()  # cell.value == 2048 sale True -> Victoria
+
+def test_is_victory_no_victory():
+    board = Board(size=4)
+    board.grid[0][0].set_value(2)  # Ninguna celda con 2048
+    game = Game(size=4, board=board)
+    assert not game.is_victory()  # cell.value == 2048 sale False -> No hay victoria
