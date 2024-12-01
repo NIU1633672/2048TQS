@@ -94,8 +94,8 @@ def test_has_no_moves_possible_full_no_combinations():
     values = [
         [2, 4, 8, 16],
         [32, 64, 128, 256],
-        [512, 1024, 2048, 4096],
-        [8192, 16384, 32768, 65536],
+        [512, 1024, 2048, 2],
+        [2, 4, 8, 16],
     ]
     for i in range(4):
         for j in range(4):
