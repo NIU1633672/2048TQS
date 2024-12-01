@@ -30,6 +30,30 @@ def test_set_invalid_value():
         with pytest.raises(ValueError):
             cell.set_value(value)  # Debe lanzar una excepción si el valor no es válido
 
+# Test de valores límite y frontera
+
+def test_set_value_with_limits_and_boundaries():
+    """
+    Verifica el comportamiento del método set_value en valores frontera y límite.
+    """
+    cell = Cell()
+
+    # Valores frontera (válidos)
+    cell.set_value(2)  # Frontera inferior
+    assert cell.value == 2
+
+    cell.set_value(2048)  # Frontera superior
+    assert cell.value == 2048
+    
+    cell.set_value(16) # Valor interior
+    assert cell.value == 16
+
+    invalid_values = [1, 3, 2047, 2049]  # Valores no válidos
+    for value in invalid_values:
+        with pytest.raises(ValueError):
+            cell.set_value(value)  # Debe lanzar una excepción si el valor no es válido
+           
+    
 
 def test_reset_cell():
     """
@@ -41,3 +65,4 @@ def test_reset_cell():
     cell.reset()  # Resetear la celda
     assert cell.value == 0  # Debe estar en el estado inicial
     assert cell.is_empty()  # Debe estar vacía
+

@@ -121,7 +121,7 @@ def test_board_size_values():
     """
     Verifica el comportamiento del tamaño del tablero en valores frontera y límites.
     """
-
+    
     # Valor frontera o único valor permitido (4)   
 
     board_max = Board(4)  # Frontera superior válida
