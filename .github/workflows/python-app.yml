@@ -27,3 +27,7 @@ jobs:
     - name: Run tests
       run: |
         python -m pytest
+
+    - name: Check code quality
+      run: |
+        flake8 .  # Ejecuta Flake8 en el directorio actual
