@@ -6,21 +6,28 @@ class Board:
     Clase que representa un tablero de juego para 2048.
     """
 
-    def __init__(self, size):
+    def __init__(self, size=4):
         """
         Inicializa un tablero vacío de tamaño `size x size`.
         Cada posición del tablero contiene una instancia de la clase Cell.
 
-        :param size: Dimensión del tablero (número de filas y columnas).
+        size: Dimensión del tablero (número de filas y columnas).
         """
+        # Precondición (tablero debe ser 4 x 4)
+        
+        if size != 4:
+            raise ValueError("El tamaño del tablero debe ser 4x4.")
+        
         self.size = size
         self.grid = [[Cell() for _ in range(size)] for _ in range(size)]
         self.last_move_score = 0  # Inicializamos el puntaje del último movimiento
-
+        
     def reset(self):
         for row in self.grid:
             for cell in row:
-                cell.reset()  # Asume que reset() en Cell establece el valor a 0 
+                cell.reset()  # Asume que reset() en Cell establece el valor a 0
+                
+        assert self.is_empty() # Poscondición: todas las celdas deben estar vacías
 
 
     def add_random_tile(self):
@@ -33,10 +40,16 @@ class Board:
             for col in range(self.size) if self.grid[row][col].is_empty()
         ]
         
-        # Si hay celdas vacías, seleccionar una al azar
-        if empty_cells:
-            row, col = random.choice(empty_cells)
-            self.grid[row][col].set_value(random.choice([2, 4]))
+        assert empty_cells # Poscondicion: tablero debe tener almenos una celda vacia
+        
+        row, col = random.choice(empty_cells)
+    
+        # Utiliza pesos para favorecer el 2 sobre el 4
+        value = random.choices([2, 4], weights=[0.7, 0.3])[0]
+        self.grid[row][col].set_value(value)
+        
+            
+        assert self.grid[row][col].value in (2,4) #Poscondicion: celda tiene valor 2 o 4
 
     def move_left(self):
         """
@@ -75,6 +88,8 @@ class Board:
             for i in range(self.size):
                 row[i].set_value(new_values[i])
 
+        if moved: #Poscondicion: ha habido movimiento de una ficha
+            assert any(cell.value != 0 for row in self.grid for cell in row)
         return moved
 
 
@@ -117,6 +132,8 @@ class Board:
             for i in range(self.size):
                 row[i].set_value(new_values[i])
 
+        if moved: #Poscondicion: ha habido movimiento de una ficha
+            assert any(cell.value != 0 for row in self.grid for cell in row)
         return moved
 
 
@@ -158,6 +175,9 @@ class Board:
             for i in range(self.size):
                 self.grid[i][col].set_value(new_values[i])
 
+    
+        if moved: #Poscondicion: ha habido movimiento de una ficha
+            assert any(cell.value != 0 for row in self.grid for cell in row)
         return moved
     
     def move_down(self):
@@ -198,10 +218,16 @@ class Board:
             for i in range(self.size):
                 self.grid[i][col].set_value(new_values[self.size - 1 - i])  # Colocar desde arriba hacia abajo
 
+        if moved: #Poscondicion: ha habido movimiento de una ficha
+            assert any(cell.value != 0 for row in self.grid for cell in row)
         return moved
     
     def is_full(self):
         """Verifica si todas las celdas del tablero están llenas."""
+        
+        # Precondición: self.grid debe ser una matriz válida de celdas
+        assert isinstance(self.grid, list) and all(isinstance(row, list) for row in self.grid)
+        
         for row in self.grid:
             for cell in row:
                 if cell.is_empty():
@@ -209,21 +235,39 @@ class Board:
         return True
 
     def has_moves(self):
-        """Verifica si hay movimientos posibles en el tablero."""
-        # Comprobamos si hay celdas vacías
-        for row in self.grid:
-            for cell in row:
-                if cell.is_empty():
-                    print(f"Found empty cell: {cell}")  # Para depuración
-                    return True
-        # Comprobamos combinaciones posibles
+        """
+        Verifica si hay movimientos posibles en el tablero:
+        - Celdas vacías.
+        - Combinaciones posibles entre celdas adyacentes.
+        """
+        
+        # Precondición: self.grid debe ser una matriz válida de celdas
+        assert isinstance(self.grid, list) and all(isinstance(row, list) for row in self.grid)
+        
+        
+        # Verifica si hay celdas vacías
+        if not self.is_full():
+             # Postcondición: Si hay celdas vacías, se puede mover
+            assert any(cell.is_empty() for row in self.grid for cell in row)
+            return True
+
+        # Verifica si hay combinaciones posibles
+        # Poscondiciones: se encuentra combinacion posible (true)
         for i in range(self.size):
             for j in range(self.size):
-                if j < self.size - 1 and self.grid[i][j].value == self.grid[i][j + 1].value:  # Combinaciones horizontales
-                    return True
-                if i < self.size - 1 and self.grid[i][j].value == self.grid[i + 1][j].value:  # Combinaciones verticales
-                    return True
-        return False
+                current_value = self.grid[i][j].value
 
+                # Verifica combinaciones horizontales
+                if j + 1 < self.size and self.grid[i][j + 1].value == current_value:
+                    return True
+
+                # Verifica combinaciones verticales
+                if i + 1 < self.size and self.grid[i + 1][j].value == current_value:
+                    return True        
+
+        
+        # Postcondición: Si no hay celdas vacías ni combinaciones posibles (si devuelve false no puede haber celdas vacias)
+        assert not any(cell.is_empty() for row in self.grid for cell in row)
+        return False
 
 

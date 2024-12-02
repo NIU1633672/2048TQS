@@ -2,16 +2,22 @@ from src.model.board import Board
 
 class Game:
     def __init__(self, size, board=None):
+        
+        assert size == 4 #Precondicion: tablero debe ser 4
+        
         if board is None:
             self.board = Board(size)
         else:
             self.board = board
         self.score = 0
+        
+        assert isinstance(self.board, Board) # Poscondicion: Se crea tablero con tamaño indicado
 
     def play_turn(self, direction):
         """
         Realiza un turno completo en el juego: movimiento, puntuación y nueva ficha.
         """
+                        
         # Realizamos el movimiento
         if direction == "left":
             move_successful = self.board.move_left()
@@ -22,29 +28,42 @@ class Game:
         elif direction == "down":
             move_successful = self.board.move_down()
         else:
-            raise ValueError("Dirección inválida")
+            raise ValueError("Dirección inválida") #Precondicion: si direccion no es correcta no se hace movimiento
+
+        assert isinstance(move_successful, bool) # poscondicion: se hace el movimiento
 
         if not move_successful:
             return False
 
         # Actualizamos la puntuación
+        previous_score = self.score
         self.score += self.board.last_move_score
+        
+        assert self.score >= previous_score # Poscondicion: se aumenta puntuacion
 
-        # Añadimos una nueva ficha
-        self.board.add_random_tile()
+        
 
         return True
 
-    def is_game_over(self):
+    def is_game_over(self):    
+        
         # Si hay movimientos disponibles, el juego no ha terminado
         if self.board.has_moves():
             return False
         
-        # Comprobar si hay alguna celda con valor 2048 (victoria)
-        for row in self.board.grid:
-            for cell in row:
-                if cell.value == 2048:
-                    return True  # El juego se ha ganado
+        # Poscondicion: devuelve false si hay movimientos
         
         # Si no hay movimientos disponibles, el juego ha terminado
         return True
+
+    def is_victory(self):
+        # Comprobar si hay alguna celda con valor 2048 (victoria)
+        for row in self.board.grid:
+            for cell in row:                
+                if cell.value == 2048:
+                    return True  # El juego se ha ganado
+        
+        return False       
+        
+                
+    

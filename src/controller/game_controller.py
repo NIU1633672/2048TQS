@@ -9,7 +9,11 @@ class GameController:
 
     def add_random_tile(self):
         """Usa el método de Board para agregar una ficha aleatoria."""
+        initial_empty_count = sum(cell.is_empty() for row in self.game.board.grid for cell in row)
         self.game.board.add_random_tile()
+        final_empty_count = sum(cell.is_empty() for row in self.game.board.grid for cell in row)
+
+        assert final_empty_count == initial_empty_count - 1 # Poscondicion: debe haber una celda vacia menos
 
     def display(self):
         """Pide a la vista que muestre el tablero actual."""
@@ -17,10 +21,18 @@ class GameController:
     
     def play_turn(self, direction):
         """Realiza un movimiento en la dirección especificada."""
+        
+        assert direction in ["left", "right", "up", "down"] # precondicion: movimiento valido
+        
         return self.game.play_turn(direction)
 
     def start_game(self):
         """Inicia el juego y gestiona el bucle principal."""
+        
+        # Precondicion: juego debe estar correctamente inicializado
+        
+        assert self.game is not None
+        
         self.add_random_tile()  # Agrega una ficha al iniciar el juego
         while True:
             self.display()

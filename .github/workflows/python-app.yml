@@ -2,9 +2,9 @@ name: Python application
 
 on:
   push:
-    branches: [main]
+    branches: [main, segunda-version]
   pull_request:
-    branches: [main]
+    branches: [main, segunda-version] 
 
 jobs:
   test:
@@ -27,3 +27,5 @@ jobs:
     - name: Run tests
       run: |
         python -m pytest
+
+    
