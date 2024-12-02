@@ -186,3 +186,12 @@ def test_has_moves_multiple_iterations():
     board.grid[1][1].set_value(4)  # Otro movimiento posible
     game = Game(size=4, board=board)
     assert board.has_moves()  # Iteraciones: 3 filas x 3 comparaciones
+    
+class MockBoard:
+    def __init__(self):
+        self.grid = [[MockCell(0) for _ in range(4)] for _ in range(4)]  # Crear un tablero vacío
+
+    def move_left(self):
+        # Simular un movimiento a la izquierda
+        return True
+

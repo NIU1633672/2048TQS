@@ -1,4 +1,5 @@
 # src/view/game_view.py
+from unittest.mock import Mock
 
 class GameView:
     def display_board(self, board):
@@ -19,4 +20,5 @@ class GameView:
         if game_status == "won":
             print("¡Has ganado!")
         elif game_status == "lost":
-            print("Juego terminado")
+            print("Juego terminado")            
+    

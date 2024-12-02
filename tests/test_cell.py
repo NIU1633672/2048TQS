@@ -1,6 +1,8 @@
 # tests/test_cell.py
 import pytest
 from src.model.cell import Cell
+from unittest import TestCase
+from unittest.mock import MagicMock
 
 def test_initialize_empty_cell():
     cell = Cell()
