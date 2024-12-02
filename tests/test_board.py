@@ -99,7 +99,7 @@ def test_move_left():
     # Añade aserciones para verificar el estado del tablero después del movimiento
     assert controller.game.board.grid[0][0].get_value() == 4
     
-def test_move_left():
+def test_move_left1():
     controller = GameController(4)
     controller.game.board.grid[0][0].set_value(2048)  
     controller.game.board.grid[0][1].set_value(2048)
