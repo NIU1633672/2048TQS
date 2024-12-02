@@ -21,7 +21,8 @@ class Cell:
         self.value = value
         
         # Poscondicion (valor = 0, o valor = potencia de 2 y menor o igual que 2048)
-        assert self.value == 0 or (self.value > 0 and (self.value & (self.value - 1)) == 0 and self.value <= 2048)
+        if not (self.value == 0 or (self.value > 0 and (self.value & (self.value - 1)) == 0 and self.value <= 2048)):
+            raise AssertionError("Poscondición fallida: el valor no es 0 o una potencia de 2 válida.")
 
     def reset(self):
         """

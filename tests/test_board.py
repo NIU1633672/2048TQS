@@ -22,6 +22,28 @@ def test_initialize_board_with_empty_cells():
         for cell in row:
             assert cell.is_empty(), "Todas las celdas deben estar vacías al inicio"
 
+# Particions equivalents i valors límit reset
+
+def test_reset_empty_board():
+    board = Board(4)  # Tablero vacío
+    board.reset()
+    assert board.is_empty()   # Debe seguir vacío
+
+def test_reset_partial_filled_board():
+    board = Board(4)
+    board.grid[0][0].set_value(2)  # Una celda ocupada
+    board.reset()
+    assert board.is_empty()  # Debe estar vacío después de reset
+
+def test_reset_fully_filled_board():
+    board = Board(4)
+    for row in board.grid:
+        for cell in row:
+            cell.set_value(2)  # Llenamos todas las celdas
+    board.reset()
+    assert board.is_empty()  # Debe estar vacío después de reset
+
+# Particio equivalent add_random_tile (vàlid / no vàlid)
 
 def test_add_random_tile():
     controller = GameController(4)
@@ -30,50 +52,223 @@ def test_add_random_tile():
     # Verifica que una celda vacía ahora tiene un valor válido
     has_valid_value = any(cell.get_value() in (2, 4) for row in initial_board.grid for cell in row if cell.get_value() is not None)
     assert has_valid_value
+    
+def test_add_random_tile_invalid_value():
+    board = Board(4)  # Crea un tablero de 4x4
+    board.reset()  # Asegúrate de que el tablero esté vacío al inicio
+
+    # Asegúrate de que no hay celdas llenas antes de agregar una
+    assert all(cell.is_empty() for row in board.grid for cell in row), "El tablero debe estar vacío"
+
+    # Llama a add_random_tile y verifica que se añade un valor válido (2 o 4)
+    board.add_random_tile()
+    
+    # Comprueba que no hay valores inválidos (3) en el tablero
+    for row in board.grid:
+        for cell in row:
+            assert cell.get_value() != 3, "No debe haber un valor inválido en el tablero"
+
+# Valors limit i frontera add random tile
+
+def test_add_random_tile_invalid_values():
+    board = Board(4)  # Crea un tablero de 4x4
+    board.reset()  # Asegúrate de que el tablero esté vacío al inicio
+
+    # Asegúrate de que no hay celdas llenas antes de agregar una
+    assert all(cell.is_empty() for row in board.grid for cell in row), "El tablero debe estar vacío"
+
+    # Llama a add_random_tile y verifica que se añade un valor válido (2 o 4)
+    board.add_random_tile()
+    
+    # Comprueba que no hay valores inválidos (1, 3 y 5) en el tablero
+    for row in board.grid:
+        for cell in row:
+            assert cell.get_value() != 1, "No debe haber un valor inválido 1 en el tablero"
+            assert cell.get_value() != 3, "No debe haber un valor inválido 3 en el tablero"
+            assert cell.get_value() != 5, "No debe haber un valor inválido 5 en el tablero"
+
+
 
 def test_move_left():
     controller = GameController(4)
-    controller.game.board.grid[0][0].set_value(2)  # Cambiar aquí
+    controller.game.board.grid[0][0].set_value(2)  
+    controller.game.board.grid[0][1].set_value(2)
+    
     # Asegúrate de que el movimiento a la izquierda funciona como se espera
     controller.play_turn('left')
     # Añade aserciones para verificar el estado del tablero después del movimiento
+    assert controller.game.board.grid[0][0].get_value() == 4
+    
+def test_move_left():
+    controller = GameController(4)
+    controller.game.board.grid[0][0].set_value(2048)  
+    controller.game.board.grid[0][1].set_value(2048)
+    
+    with pytest.raises(ValueError):
+        controller.play_turn('left')
+    
+def test_move_left_with_1():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(1)  # Debería fallar al establecer el valor
+
+def test_move_left_with_3():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(3)  # Debería fallar al establecer el valor
+        
+def test_move_left_with_2047():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(2047)  # Debería fallar al establecer el valor
+
+def test_move_left_with_2049():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(2049)  # Debería fallar al establecer el valor
 
 def test_move_right():
     controller = GameController(4)
-    controller.game.board.grid[0][2].set_value(2)  # Establece un valor en la celda (0, 2)
-    controller.game.board.grid[0][3].set_value(2)  # Establece otro valor en la celda (0, 3)
+    controller.game.board.grid[0][2].set_value(2)  
+    controller.game.board.grid[0][3].set_value(2)
     
-    # Realiza el movimiento a la derecha
+    # Asegúrate de que el movimiento a la derecha funciona como se espera
     controller.play_turn('right')
+    # Añade aserciones para verificar el estado del tablero después del movimiento
+    assert controller.game.board.grid[0][3].get_value() == 4
+
+def test_move_right_with_2048():
+    controller = GameController(4)
+    controller.game.board.grid[0][2].set_value(2048)  
+    controller.game.board.grid[0][3].set_value(2048)
     
-    # Verifica que las celdas se hayan combinado correctamente
-    assert controller.game.board.grid[0][3].get_value() == 4  # La celda (0, 3) debe contener el resultado de la combinación
-    assert controller.game.board.grid[0][2].get_value() == 0  # La celda (0, 2) debe estar vacía
+    with pytest.raises(ValueError):
+        controller.play_turn('right')
+
+def test_move_right_with_1():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(1)  # Debería fallar al establecer el valor
+
+def test_move_right_with_3():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(3)  # Debería fallar al establecer el valor
+
+def test_move_right_with_2047():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(2047)  # Debería fallar al establecer el valor
+
+def test_move_right_with_2049():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(2049)  # Debería fallar al establecer el valor
 
 
 def test_move_up():
     controller = GameController(4)
-    controller.game.board.grid[2][0].set_value(2)  # Establece un valor en la celda (2, 0)
-    controller.game.board.grid[1][0].set_value(2)  # Establece otro valor en la celda (1, 0)
+    controller.game.board.grid[2][0].set_value(2)  
+    controller.game.board.grid[3][0].set_value(2)
     
-    # Realiza el movimiento hacia arriba
+    # Asegúrate de que el movimiento hacia arriba funciona como se espera
     controller.play_turn('up')
+    # Añade aserciones para verificar el estado del tablero después del movimiento
+    assert controller.game.board.grid[0][0].get_value() == 4
+
+def test_move_up_with_2048():
+    controller = GameController(4)
+    controller.game.board.grid[2][0].set_value(2048)  
+    controller.game.board.grid[3][0].set_value(2048)
     
-    # Verifica que las celdas se hayan combinado correctamente
-    assert controller.game.board.grid[0][0].get_value() == 4  # La celda (0, 0) debe contener el resultado de la combinación
+    with pytest.raises(ValueError):
+        controller.play_turn('up')
+
+def test_move_up_with_1():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(1)  # Debería fallar al establecer el valor
+
+def test_move_up_with_3():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(3)  # Debería fallar al establecer el valor
+
+def test_move_up_with_2047():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(2047)  # Debería fallar al establecer el valor
+
+def test_move_up_with_2049():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(2049)  # Debería fallar al establecer el valor
   
 
 def test_move_down():
     controller = GameController(4)
-    controller.game.board.grid[0][0].set_value(2)  # Establece un valor en la celda (0, 0)
-    controller.game.board.grid[1][0].set_value(2)  # Establece otro valor en la celda (1, 0)
+    controller.game.board.grid[2][0].set_value(2)  
+    controller.game.board.grid[3][0].set_value(2)
     
-    # Realiza el movimiento hacia abajo
+    # Asegúrate de que el movimiento hacia abajo funciona como se espera
     controller.play_turn('down')
+    # Añade aserciones para verificar el estado del tablero después del movimiento
+    assert controller.game.board.grid[3][0].get_value() == 4
+
+def test_move_down_with_2048():
+    controller = GameController(4)
+    controller.game.board.grid[2][0].set_value(2048)  
+    controller.game.board.grid[3][0].set_value(2048)
     
-    # Verifica que las celdas se hayan combinado correctamente
-    assert controller.game.board.grid[3][0].get_value() == 4  # La celda (3, 0) debe contener el resultado de la combinación
+    with pytest.raises(ValueError):
+        controller.play_turn('down')
+
+def test_move_down_with_1():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(1)  # Debería fallar al establecer el valor
+
+def test_move_down_with_3():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(3)  # Debería fallar al establecer el valor
+
+def test_move_down_with_2047():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(2047)  # Debería fallar al establecer el valor
+
+def test_move_down_with_2049():
+    controller = GameController(4)
+    with pytest.raises(ValueError):
+        controller.game.board.grid[0][0].set_value(2049)  # Debería fallar al establecer el valor
+
+def test_move_down_equivalence_partitions():
+    controller = GameController(4)
+
+    # Caso válido: movimientos que deben combinarse
+    controller.game.board.grid[2][0].set_value(2)
+    controller.game.board.grid[3][0].set_value(2)
     
+    # Realizar movimiento hacia abajo
+    move_successful = controller.play_turn('down')
+    
+    # Comprobar que el movimiento fue exitoso
+    assert move_successful
+    assert controller.game.board.grid[3][0].get_value() == 4  # Combinación debe dar 4
+    assert controller.game.board.grid[2][0].get_value() == 0  # La celda debe estar vacía
+
+    # Caso no válido: intentar mover un 2 y un 4 (no se deben combinar)
+    controller.game.board.grid[2][0].set_value(2)  # Establecer 2 en la celda
+    controller.game.board.grid[3][0].set_value(4)  # Establecer 4 en la celda inferior
+
+    # Intentar mover hacia abajo, se espera que el movimiento no sea exitoso
+    move_successful = controller.play_turn('down')
+    
+    # Verificar que no hubo movimiento
+    assert not move_successful
+    assert controller.game.board.grid[3][0].get_value() == 4  # La celda inferior debe seguir siendo 4
+    assert controller.game.board.grid[2][0].get_value() == 2  # La celda superior debe seguir siendo 2   
 
       
 # Test valores frontera y valores límite
@@ -112,19 +307,76 @@ def test_move_left_no_combination():
     board.move_left()
     assert board.grid[0][0].get_value() == 2  # No se combinan
     
-def test_move_up_combination():
+def test_move_left_empty_cells():
     board = Board()
     board.grid[0][0].set_value(2)
-    board.grid[1][0].set_value(2)
-    assert board.move_up()  # Debería devolver True
-    assert board.grid[0][0].get_value() == 4  # Las celdas deben combinarse
+    board.grid[0][1].set_value(0)  # Celda vacía
+    board.move_left()
+    assert board.grid[0][0].get_value() == 2  # Debe permanecer igual
+    assert board.grid[0][1].get_value() == 0  # Debe permanecer vacío
 
-def test_move_up_no_combination():
+def test_move_left_multiple_combinations():
     board = Board()
     board.grid[0][0].set_value(2)
-    board.grid[1][0].set_value(4)
-    assert not board.move_up()  # Debería devolver False, sin cambios
+    board.grid[0][1].set_value(2)
+    board.grid[0][2].set_value(4)
+    board.grid[0][3].set_value(4)  # Se pueden combinar
+    assert board.move_left() == True  # Se espera que haya movimiento
+    assert board.grid[0][0].get_value() == 4  # Combinación 2 + 2
+    assert board.grid[0][1].get_value() == 8  # Combinación 4 + 4
+    assert board.grid[0][2].get_value() == 0  # Relleno con 0
+
+def test_move_left_no_change():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(4)  # No se pueden combinar
+    assert board.move_left() == False  # No hubo movimiento
     assert board.grid[0][0].get_value() == 2  # Sin cambios
+    assert board.grid[0][1].get_value() == 4  # Sin cambios
+    
+def test_move_right_combination():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(2)  # Deben combinarse
+    assert board.move_right() == True  # Se espera que haya movimiento
+    assert board.grid[0][3].get_value() == 4  # La combinación debe estar a la derecha
+
+def test_move_right_no_combination():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(4)  # No se pueden combinar    
+    assert board.grid[0][0].get_value() == 2  # Sin cambios
+    assert board.grid[0][1].get_value() == 4  # Sin cambios
+
+def test_move_right_with_empty_cells():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(0)  # Celda vacía
+    assert board.move_right() == True  # Debe mover 2 a la derecha
+    assert board.grid[0][3].get_value() == 2  # Debe moverse a la derecha
+    
+
+def test_move_right_multiple_combinations():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(2)
+    board.grid[0][2].set_value(4)
+    board.grid[0][3].set_value(4)  # Deben combinarse
+    assert board.move_right() == True  # Se espera que haya movimiento
+    assert board.grid[0][2].get_value() == 4  
+    assert board.grid[0][3].get_value() == 8  
+
+def test_move_right_no_change():
+    board = Board()
+    board.grid[0][0].set_value(2)
+    board.grid[0][1].set_value(4)
+    board.grid[0][2].set_value(2)
+    board.grid[0][3].set_value(4)  # Sin cambios
+    assert board.move_right() == False  # No hubo movimiento
+    assert board.grid[0][0].get_value() == 2  # Sin cambios
+    assert board.grid[0][1].get_value() == 4  # Sin cambios
+    
+
 
 
 # Estas dos también son condition coverage 
@@ -168,6 +420,8 @@ def test_has_moves_possible_with_combinations():
         for j in range(4):
             board.grid[i][j].set_value(values[i][j])
     assert board.has_moves()  # Hay combinaciones posibles (dos 2 en la primera fila)
+    
+
 
 # Loop testing
 
@@ -187,11 +441,5 @@ def test_has_moves_multiple_iterations():
     game = Game(size=4, board=board)
     assert board.has_moves()  # Iteraciones: 3 filas x 3 comparaciones
     
-class MockBoard:
-    def __init__(self):
-        self.grid = [[MockCell(0) for _ in range(4)] for _ in range(4)]  # Crear un tablero vacío
 
-    def move_left(self):
-        # Simular un movimiento a la izquierda
-        return True
 

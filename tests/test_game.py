@@ -202,6 +202,7 @@ def test_play_turn_invalid_direction():
     with pytest.raises(ValueError):
         game.play_turn("diagonal")  # Camino 1: dirección no válida
 
+
 def test_play_turn_no_valid_move():
     board = Board(size=4)
     game = Game(size=4, board=board)
@@ -215,8 +216,12 @@ def test_play_turn_no_valid_move():
         for j in range(4):
             board.grid[i][j].set_value(values[i][j])  # Tablero sin movimientos
     assert not game.play_turn("left")  # Camino 2: movimiento inválido
+    assert not game.play_turn("right")  # Camino 2: movimiento inválido
+    assert not game.play_turn("up")  # Camino 2: movimiento inválido
+    assert not game.play_turn("down")  # Camino 2: movimiento inválido
 
-def test_play_turn_valid_move():
+
+def test_play_turn_valid_move_left():
     board = Board(size=4)
     game = Game(size=4, board=board)
     board.grid[0][0].set_value(2)
@@ -226,8 +231,44 @@ def test_play_turn_valid_move():
         not cell.is_empty() for row in game.board.grid for cell in row
     )
     assert non_empty_cells == 1  # Se añade una nueva ficha
+
+
+def test_play_turn_valid_move_right():
+    board = Board(size=4)
+    game = Game(size=4, board=board)
+    board.grid[0][2].set_value(2)
+    board.grid[0][3].set_value(2)
+    assert game.play_turn("right")  # Camino 4: movimiento válido
+    non_empty_cells = sum(
+        not cell.is_empty() for row in game.board.grid for cell in row
+    )
+    assert non_empty_cells == 1  # Se añade una nueva ficha
+
+
+def test_play_turn_valid_move_up():
+    board = Board(size=4)
+    game = Game(size=4, board=board)
+    board.grid[2][0].set_value(2)
+    board.grid[3][0].set_value(2)
+    assert game.play_turn("up")  # Camino 5: movimiento válido
+    non_empty_cells = sum(
+        not cell.is_empty() for row in game.board.grid for cell in row
+    )
+    assert non_empty_cells == 1  # Se añade una nueva ficha
+
+
+def test_play_turn_valid_move_down():
+    board = Board(size=4)
+    game = Game(size=4, board=board)
+    board.grid[0][0].set_value(2)
+    board.grid[1][0].set_value(2)
+    assert game.play_turn("down")  # Camino 6: movimiento válido
+    non_empty_cells = sum(
+        not cell.is_empty() for row in game.board.grid for cell in row
+    )
+    assert non_empty_cells == 1  # Se añade una nueva ficha
     
-# Loop testing bucle simple
+# Loop testing 
 
 def test_is_victory_no_iterations():
     board = Board(size=4)  # Tablero 4x4 vacío
@@ -251,7 +292,7 @@ def test_is_victory_no_victory():
     game = Game(size=4, board=board)  # Ninguna celda tiene 2048
     assert not game.is_victory()  # Iteraciones: 16 (4x4)
     
-# Loop testing bucle anidado
+# Loop testing 
 
 def test_is_game_over_no_iterations():
     board = Board(size=4)  # Tablero 4x4 lleno
@@ -278,7 +319,7 @@ def test_is_game_over_multiple_iterations():
     game = Game(size=4, board=board)
     assert not game.is_game_over()  # Iteraciones: 16 (sin ceros)
     
-# Bucle anidado loop testing (play_turn llama a movimientos, que son bucles anidados)
+# loop testing
 
 def test_play_turn_no_iterations():
     board = Board(size=4)  # Tablero 4x4 vacío

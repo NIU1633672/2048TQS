@@ -179,6 +179,9 @@ class Board:
         if moved: #Poscondicion: ha habido movimiento de una ficha
             assert any(cell.value != 0 for row in self.grid for cell in row)
         return moved
+
+
+
     
     def move_down(self):
         """
@@ -271,3 +274,9 @@ class Board:
         return False
 
 
+    def is_empty(self):
+        """
+        Verifica si todas las celdas del tablero están vacías.
+        
+        """
+        return all(cell.is_empty() for row in self.grid for cell in row)
