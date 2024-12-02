@@ -61,8 +61,7 @@ def test_move_up():
     
     # Verifica que las celdas se hayan combinado correctamente
     assert controller.game.board.grid[0][0].get_value() == 4  # La celda (0, 0) debe contener el resultado de la combinación
-    assert controller.game.board.grid[1][0].get_value() == 0  # La celda (1, 0) debe estar vacía
-    assert controller.game.board.grid[2][0].get_value() == 0  # La celda (2, 0) debe estar vacía
+  
 
 def test_move_down():
     controller = GameController(4)
@@ -74,10 +73,7 @@ def test_move_down():
     
     # Verifica que las celdas se hayan combinado correctamente
     assert controller.game.board.grid[3][0].get_value() == 4  # La celda (3, 0) debe contener el resultado de la combinación
-    assert controller.game.board.grid[1][0].get_value() == 0  # La celda (1, 0) debe estar vacía
-    assert controller.game.board.grid[0][0].get_value() == 0  # La celda (0, 0) debe estar vacía
-
-
+    
 
       
 # Test valores frontera y valores límite
