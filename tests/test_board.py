@@ -171,7 +171,7 @@ def test_move_up():
     controller.game.board.grid[2][0].set_value(2)  
     controller.game.board.grid[3][0].set_value(2)
     
-    # Asegúrate de que el movimiento hacia arriba funciona como se espera
+    # movimiento hacia arriba funciona como se espera
     controller.play_turn('up')
     # Añade aserciones para verificar el estado del tablero después del movimiento
     assert controller.game.board.grid[0][0].get_value() == 4
