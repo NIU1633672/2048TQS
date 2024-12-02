@@ -1,5 +1,5 @@
 # mock_board.py
-from random import choice  # Asegúrate de importar choice
+from random import choice  
 from mocks.mock_cell import MockCell
 
 class MockBoard:
@@ -16,8 +16,7 @@ class MockBoard:
         return self.board  # Devuelve el estado actual del tablero
 
     def move_left(self):
-        print("Moving left")
-        # Aquí podrías simular el movimiento en el tablero
+        print("Moving left")        
 
     def display(self):
         print(f"Board displayed: {self.board}")
