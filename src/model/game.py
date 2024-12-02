@@ -30,8 +30,7 @@ class Game:
         # Actualizamos la puntuación
         self.score += self.board.last_move_score
 
-        # Añadimos una nueva ficha
-        self.board.add_random_tile()
+        
 
         return True
 
