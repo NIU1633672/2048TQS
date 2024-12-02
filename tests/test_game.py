@@ -4,6 +4,48 @@ from src.model.board import Board
 from src.model.cell import Cell
 from unittest.mock import patch
 
+def test_init_boundary_values():
+    # Caso límite: tamaño correcto (4)
+    game = Game(4)
+    assert game.board.size == 4  # Debe crear un tablero de tamaño 4
+    assert isinstance(game.board, Board)  # Debe ser una instancia de Board
+    assert game.score == 0  # Puntuación inicial debe ser 0
+
+    # Caso límite incorrecto: tamaño incorrecto
+    try:
+        Game(3)  # Debe lanzar una excepción
+        assert False, "Expected an AssertionError for size 3"
+    except AssertionError:
+        pass  # Se espera que falle, así que esto es correcto
+
+    try:
+        Game(5)  # Debe lanzar una excepción
+        assert False, "Expected an AssertionError for size 5"
+    except AssertionError:
+        pass  # Se espera que falle, así que esto es correcto
+
+def test_init_equivalence_partitions():
+    # Partición: Tamaño correcto (4)
+    game = Game(4)
+    assert game.board.size == 4  # Debe crear un tablero de tamaño 4
+    assert isinstance(game.board, Board)  # Debe ser una instancia de Board
+    assert game.score == 0  # Puntuación inicial debe ser 0
+
+    # Partición: Otro tablero (board no es None)
+    custom_board = Board(4)
+    game_with_custom_board = Game(4, custom_board)
+    assert game_with_custom_board.board == custom_board  # Debe usar el otro tablero
+    assert game_with_custom_board.score == 0  # Puntuación inicial debe seguir siendo 0
+
+    # Partición: Tamaño incorrecto (3 o 5, que deben causar una excepción)
+    for invalid_size in [3, 5]:
+        try:
+            Game(invalid_size)  # Debe lanzar una excepción
+            assert False, f"Expected an AssertionError for size {invalid_size}"
+        except AssertionError:
+            pass  # Se espera que falle, así que esto es correcto
+
+
 def test_play_turn():
     """
     Verifica que un turno completo funcione correctamente en el modelo de juego.
@@ -339,3 +381,136 @@ def test_play_turn_multiple_iterations():
     board.grid[0][1].set_value(4)  # Varias iteraciones posibles
     game = Game(size=4, board=board)
     assert not game.play_turn("up")  # Iteraciones: varias filas y columnas
+    
+# valors limit i frontera
+
+def test_play_turn_boundary_values():
+    """
+    Verifica el comportamiento de play_turn en valores límite y frontera.
+    """
+    # Caso límite: tablero completamente lleno
+    board_full = Board(size=4)
+    values_full = [
+        [2, 4, 2, 4],
+        [4, 2, 4, 2],
+        [2, 4, 2, 4],
+        [4, 2, 4, 2],
+    ]
+    for i in range(4):
+        for j in range(4):
+            board_full.grid[i][j].set_value(values_full[i][j])
+    game_full = Game(size=4, board=board_full)
+    
+    # Intentar mover en una dirección (debería retornar False porque no hay movimientos posibles)
+    assert not game_full.play_turn("left")
+    assert not game_full.play_turn("right")
+    assert not game_full.play_turn("up")
+    assert not game_full.play_turn("down")
+
+    # Caso límite: un solo movimiento posible
+    board_single_move = Board(size=4)
+    values_single_move = [
+        [2, 2, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+    ]
+    for i in range(4):
+        for j in range(4):
+            board_single_move.grid[i][j].set_value(values_single_move[i][j])
+    game_single_move = Game(size=4, board=board_single_move)
+
+    # Intentar mover en una dirección (debería retornar True porque hay un movimiento válido)
+    assert game_single_move.play_turn("left")
+    assert game_single_move.score == 4  # La puntuación debe haber aumentado por el movimiento
+
+    # Verificar el estado del tablero después del movimiento
+    assert game_single_move.board.grid[0][0].value == 4  # Los dos 2 deben haberse combinado en 4
+    assert game_single_move.board.grid[0][1].is_empty()  # La segunda celda debe estar vacía
+
+    # Caso límite: tablero inicial vacío
+    board_empty = Board(size=4)
+    game_empty = Game(size=4, board=board_empty)
+
+    # Intentar mover en una dirección (debería retornar False porque no hay movimientos posibles)
+    assert not game_empty.play_turn("left")
+    assert not game_empty.play_turn("right")
+    assert not game_empty.play_turn("up")
+    assert not game_empty.play_turn("down")
+
+
+def test_is_game_over_equivalence_partitions():
+        """
+        Verifica el comportamiento de is_game_over en particiones equivalentes.
+        """
+        # Partición 1: El juego NO ha terminado (hay movimientos disponibles)
+        board_with_moves = Board(size=4)
+        values_with_moves = [
+            [2, 2, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+        ]
+        for i in range(4):
+            for j in range(4):
+                board_with_moves.grid[i][j].set_value(values_with_moves[i][j])
+        
+        game_with_moves = Game(size=4, board=board_with_moves)
+        
+        # Asegurarse de que el juego NO ha terminado
+        assert not game_with_moves.is_game_over()
+
+        # Partición 2: El juego ha terminado (no hay movimientos disponibles)
+        board_no_moves = Board(size=4)
+        values_no_moves = [
+            [2, 4, 2, 4],
+            [4, 2, 4, 2],
+            [2, 4, 2, 4],
+            [4, 2, 4, 2],
+        ]
+        for i in range(4):
+            for j in range(4):
+                board_no_moves.grid[i][j].set_value(values_no_moves[i][j])
+        
+        game_no_moves = Game(size=4, board=board_no_moves)
+        
+        # Asegurarse de que el juego ha terminado
+        assert game_no_moves.is_game_over()
+        
+def test_is_victory_equivalence_partitions():
+    """
+    Verifica el comportamiento de is_victory en particiones equivalentes.
+    """
+    # Partición 1: El juego ha ganado (hay al menos una celda con valor 2048)
+    board_with_victory = Board(size=4)
+    values_with_victory = [
+        [2, 4, 2, 4],
+        [4, 2048, 4, 2],
+        [2, 4, 2, 4],
+        [4, 2, 4, 2],
+    ]
+    for i in range(4):
+        for j in range(4):
+            board_with_victory.grid[i][j].set_value(values_with_victory[i][j])
+    
+    game_with_victory = Game(size=4, board=board_with_victory)
+    
+    # Asegurarse de que el juego ha ganado
+    assert game_with_victory.is_victory()
+
+    # Partición 2: El juego NO ha ganado (no hay celdas con valor 2048)
+    board_no_victory = Board(size=4)
+    values_no_victory = [
+        [2, 4, 2, 4],
+        [4, 8, 4, 2],
+        [2, 4, 2, 4],
+        [4, 2, 4, 2],
+    ]
+    for i in range(4):
+        for j in range(4):
+            board_no_victory.grid[i][j].set_value(values_no_victory[i][j])
+    
+    game_no_victory = Game(size=4, board=board_no_victory)
+    
+    # Asegurarse de que el juego NO ha ganado
+    assert not game_no_victory.is_victory()
